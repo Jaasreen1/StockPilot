@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, field_validator
 
 from app import db, service
+from app.api_reports import router as reports_router
 
 
 class ProductInput(BaseModel):
@@ -56,7 +57,8 @@ async def lifespan(app: FastAPI):
     db.init_db()
     yield
 
-app = FastAPI(title="StockPilot", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="StockPilot", version="1.1.0", lifespan=lifespan)
+app.include_router(reports_router)
 STATIC = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
